@@ -8,6 +8,8 @@ public class Main {
         System.out.println("out " + parser.outputFilename);
         parser.inputFilenames.forEach(System.out::println);
 
+        MergeSort mergeSort = new MergeSort(parser);
+        mergeSort.sort();
 
     }
 }
