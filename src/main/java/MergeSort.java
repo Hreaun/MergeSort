@@ -33,53 +33,75 @@ public class MergeSort {
         }
     }
 
+    private boolean compare(Integer a, Integer b) {
+        if ("-a".equals(parser.sortMode)) {
+            return a <= b;
+        } else return a >= b;
+    }
 
     private void findMinInt() {
-        Integer min = Integer.MAX_VALUE;
-        int minIndex = 0;
+        Integer nextPushVal;
+        if ("-a".equals(parser.sortMode)) {
+            nextPushVal = Integer.MAX_VALUE;
+        } else nextPushVal = Integer.MIN_VALUE;
+
+        int pushValIndex = 0;
         boolean filesNotEmpty = true;
         ArrayList<Integer> currentLine = new ArrayList<>(scanners.size());
         for (int i = 0; i < scanners.size(); i++) {
             if (scanners.get(i).hasNextLine()) {
                 try {
                     currentLine.add(i, Integer.parseInt(scanners.get(i).nextLine()));
-                    if (currentLine.get(i) <= min) {
-                        min = currentLine.get(i);
-                        minIndex = i;
+                    if (compare(currentLine.get(i), nextPushVal)) {
+                        nextPushVal = currentLine.get(i);
+                        pushValIndex = i;
                     }
-                } catch (NumberFormatException ignored) {
+                } catch (NumberFormatException e) {
+                    i--;
                 }
+            } else {
+                currentLine.add(i, null);
             }
         }
         try {
-            writer.write(min.toString() + '\n');
+            writer.write(nextPushVal.toString() + '\n');
         } catch (IOException e) {
             System.out.println("Cannot write to the output file.");
         }
 
         while (filesNotEmpty) {
             filesNotEmpty = false;
-            min = Integer.MAX_VALUE;
-            if (scanners.get(minIndex).hasNextLine()) {
+
+            if (scanners.get(pushValIndex).hasNextLine()) {
+                filesNotEmpty = true;
                 try {
-                    currentLine.set(minIndex, Integer.parseInt(scanners.get(minIndex).nextLine()));
+                    Integer nextLineInt = Integer.parseInt(scanners.get(pushValIndex).nextLine());
+                    if (compare(nextLineInt, nextPushVal)) {
+                        continue;
+                    }
+                    currentLine.set(pushValIndex, nextLineInt);
                 } catch (NumberFormatException ignored) {
+                    continue;
                 }
             } else {
-                currentLine.set(minIndex, null);
+                currentLine.set(pushValIndex, null);
             }
 
+            if ("-a".equals(parser.sortMode)) {
+                nextPushVal = Integer.MAX_VALUE;
+            } else nextPushVal = Integer.MIN_VALUE;
+
             for (int i = 0; i < currentLine.size(); i++) {
-                if ((currentLine.get(i) != null) && (currentLine.get(i) <= min)) {
+                if ((currentLine.get(i) != null) && (compare(currentLine.get(i), nextPushVal))) {
                     filesNotEmpty = true;
-                    min = currentLine.get(i);
-                    minIndex = i;
+                    nextPushVal = currentLine.get(i);
+                    pushValIndex = i;
                 }
             }
 
             try {
                 if (filesNotEmpty) {
-                    writer.write(min.toString() + '\n');
+                    writer.write(nextPushVal.toString() + '\n');
                 }
             } catch (IOException e) {
                 System.out.println("Cannot write to the output file.");
