@@ -28,7 +28,7 @@ public class MergeSort {
             outFile.createNewFile();
             writer = new FileWriter(outFile);
         } catch (IOException e) {
-            System.err.println("Cannot create/write to the output file.");
+            System.out.println("Cannot create/write to the output file.");
             System.exit(-1);
         }
     }
@@ -39,33 +39,42 @@ public class MergeSort {
         } else return a >= b;
     }
 
-    private void sortInt() {
-        Integer nextPushVal;
+    private boolean compare(String a, String b) {
         if ("-a".equals(parser.sortMode)) {
-            nextPushVal = Integer.MAX_VALUE;
-        } else nextPushVal = Integer.MIN_VALUE;
+            return b == null || a.compareTo(b) <= 0;
+        } else {
+            return b == null || a.compareTo(b) >= 0;
+        }
+    }
 
-        int pushValIndex = 0;
+    private void sortInt() {
+        Integer nextAddVal;
+        if ("-a".equals(parser.sortMode)) {
+            nextAddVal = Integer.MAX_VALUE;
+        } else nextAddVal = Integer.MIN_VALUE;
+
+        int addValIndex = 0;
         boolean filesNotEmpty = true;
         ArrayList<Integer> currentLine = new ArrayList<>(scanners.size());
-        for (int i = 0; i < scanners.size(); i++) {
+        for (int i = 0; i < scanners.size(); i++) { // заполняет начальные значения
             if (scanners.get(i).hasNextLine()) {
                 try {
                     currentLine.add(i, Integer.parseInt(scanners.get(i).nextLine()));
-                    if (compare(currentLine.get(i), nextPushVal)) {
-                        nextPushVal = currentLine.get(i);
-                        pushValIndex = i;
+                    if (compare(currentLine.get(i), nextAddVal)) {
+                        nextAddVal = currentLine.get(i);
+                        addValIndex = i;
                     }
                 } catch (NumberFormatException e) {
                     i--;
                 }
-            } else {
+            } else { // если файл пустой - удаляет сканнер
+                scanners.get(i).close();
                 scanners.remove(i);
                 currentLine.remove(i);
             }
         }
         try {
-            writer.write(nextPushVal.toString() + '\n');
+            writer.write(nextAddVal.toString() + '\n');
         } catch (IOException e) {
             System.out.println("Cannot write to the output file.");
         }
@@ -73,37 +82,38 @@ public class MergeSort {
         while (filesNotEmpty) {
             filesNotEmpty = false;
 
-            if (scanners.get(pushValIndex).hasNextLine()) {
+            if (scanners.get(addValIndex).hasNextLine()) { // читает следующее значение из файла, с которого добавлял в out
                 filesNotEmpty = true;
                 try {
-                    Integer nextLineInt = Integer.parseInt(scanners.get(pushValIndex).nextLine());
-                    if (compare(nextLineInt, nextPushVal)) {
+                    Integer nextLineInt = Integer.parseInt(scanners.get(addValIndex).nextLine());
+                    if (compare(nextLineInt, nextAddVal)) { // игнорируем значения, которые нарушают порядок сортировки
                         continue;
                     }
-                    currentLine.set(pushValIndex, nextLineInt);
+                    currentLine.set(addValIndex, nextLineInt);
                 } catch (NumberFormatException ignored) {
                     continue;
                 }
             } else {
-                scanners.remove(pushValIndex);
-                currentLine.remove(pushValIndex);
+                scanners.get(addValIndex).close();
+                scanners.remove(addValIndex);
+                currentLine.remove(addValIndex);
             }
 
             if ("-a".equals(parser.sortMode)) {
-                nextPushVal = Integer.MAX_VALUE;
-            } else nextPushVal = Integer.MIN_VALUE;
+                nextAddVal = Integer.MAX_VALUE;
+            } else nextAddVal = Integer.MIN_VALUE;
 
             for (int i = 0; i < currentLine.size(); i++) {
-                if ((compare(currentLine.get(i), nextPushVal))) {
+                if ((compare(currentLine.get(i), nextAddVal))) {
                     filesNotEmpty = true;
-                    nextPushVal = currentLine.get(i);
-                    pushValIndex = i;
+                    nextAddVal = currentLine.get(i);
+                    addValIndex = i;
                 }
             }
 
             try {
                 if (filesNotEmpty) {
-                    writer.write(nextPushVal.toString() + '\n');
+                    writer.write(nextAddVal.toString() + '\n');
                 }
             } catch (IOException e) {
                 System.out.println("Cannot write to the output file.");
@@ -112,15 +122,85 @@ public class MergeSort {
     }
 
 
+    private void sortStrings() {
+        String nextAddVal = null;
+
+        int addValIndex = 0;
+        boolean filesNotEmpty = true;
+        ArrayList<String> currentLine = new ArrayList<>(scanners.size());
+        for (int i = 0; i < scanners.size(); i++) { // заполняет начальные значения
+            if (scanners.get(i).hasNextLine()) {
+                String nextLine = scanners.get(i).nextLine();
+                if (nextLine.isBlank()) {
+                    i--;
+                    continue;
+                }
+                currentLine.add(i, nextLine);
+                if (compare(currentLine.get(i), nextAddVal)) {
+                    nextAddVal = currentLine.get(i);
+                    addValIndex = i;
+                }
+            } else {
+                scanners.get(i).close();
+                scanners.remove(i);
+                currentLine.remove(i);
+            }
+        }
+        try {
+            writer.write(nextAddVal + '\n');
+        } catch (IOException e) {
+            System.out.println("Cannot write to the output file.");
+        }
+
+        while (filesNotEmpty) {
+            filesNotEmpty = false;
+
+            if (scanners.get(addValIndex).hasNextLine()) { // читает следующее значение из файла, с которого добавлял в out
+                filesNotEmpty = true;
+                String nextLine = scanners.get(addValIndex).nextLine();
+                if ((nextLine.isBlank()) || (compare(nextLine, nextAddVal))) {  // игнорируем пустые строки и строки, которые нарушают порядок сортировки
+                    continue;
+                }
+                currentLine.set(addValIndex, nextLine);
+            } else {
+                scanners.get(addValIndex).close();
+                scanners.remove(addValIndex);
+                currentLine.remove(addValIndex);
+            }
+
+            nextAddVal = null;
+            for (int i = 0; i < currentLine.size(); i++) {
+                if ((compare(currentLine.get(i), nextAddVal))) {
+                    filesNotEmpty = true;
+                    nextAddVal = currentLine.get(i);
+                    addValIndex = i;
+                }
+            }
+
+            try {
+                if (filesNotEmpty) {
+                    writer.write(nextAddVal + '\n');
+                }
+            } catch (IOException e) {
+                System.out.println("Cannot write to the output file.");
+            }
+        }
+
+    }
+
+
     public void sort() {
         makeIO();
 
         if ("-i".equals(parser.dataType)) {
             sortInt();
+        } else {
+            sortStrings();
         }
 
         try {
             writer.close();
+            scanners.forEach(Scanner::close);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

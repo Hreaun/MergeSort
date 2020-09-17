@@ -3,11 +3,6 @@ public class Main {
         CLIParser parser = new CLIParser();
         parser.parse(args);
 
-        System.out.println(parser.sortMode);
-        System.out.println(parser.dataType);
-        System.out.println("out " + parser.outputFilename);
-        parser.inputFilenames.forEach(System.out::println);
-
         MergeSort mergeSort = new MergeSort(parser);
         mergeSort.sort();
 

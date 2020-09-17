@@ -28,18 +28,18 @@ public class CLIParser {
         }
 
         if (dataType == null) {
-            System.err.println("You must specify datatype [-s | -i].");
-            System.exit(-1);
+            System.out.println("You must specify datatype [-s | -i].");
+            System.exit(0);
         }
 
         if (outputFilename == null) {
-            System.err.println("You must specify output filename.");
-            System.exit(-1);
+            System.out.println("You must specify output filename.");
+            System.exit(0);
         }
 
         if (inputFilenames.size() == 0) {
-            System.err.println("You must specify input filenames.");
-            System.exit(-1);
+            System.out.println("You must specify input filenames.");
+            System.exit(0);
         }
     }
 }
