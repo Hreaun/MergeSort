@@ -39,7 +39,7 @@ public class MergeSort {
         } else return a >= b;
     }
 
-    private void findMinInt() {
+    private void sortInt() {
         Integer nextPushVal;
         if ("-a".equals(parser.sortMode)) {
             nextPushVal = Integer.MAX_VALUE;
@@ -60,7 +60,8 @@ public class MergeSort {
                     i--;
                 }
             } else {
-                currentLine.add(i, null);
+                scanners.remove(i);
+                currentLine.remove(i);
             }
         }
         try {
@@ -84,7 +85,8 @@ public class MergeSort {
                     continue;
                 }
             } else {
-                currentLine.set(pushValIndex, null);
+                scanners.remove(pushValIndex);
+                currentLine.remove(pushValIndex);
             }
 
             if ("-a".equals(parser.sortMode)) {
@@ -92,7 +94,7 @@ public class MergeSort {
             } else nextPushVal = Integer.MIN_VALUE;
 
             for (int i = 0; i < currentLine.size(); i++) {
-                if ((currentLine.get(i) != null) && (compare(currentLine.get(i), nextPushVal))) {
+                if ((compare(currentLine.get(i), nextPushVal))) {
                     filesNotEmpty = true;
                     nextPushVal = currentLine.get(i);
                     pushValIndex = i;
@@ -113,7 +115,9 @@ public class MergeSort {
     public void sort() {
         makeIO();
 
-        findMinInt();
+        if ("-i".equals(parser.dataType)) {
+            sortInt();
+        }
 
         try {
             writer.close();
