@@ -59,7 +59,7 @@ public class MergeSort {
         for (int i = 0; i < scanners.size(); i++) { // заполняет начальные значения
             if (scanners.get(i).hasNextLine()) {
                 try {
-                    currentLine.add(i, Integer.parseInt(scanners.get(i).nextLine()));
+                    currentLine.add(i, Integer.parseInt(scanners.get(i).nextLine().trim()));
                     if (compare(currentLine.get(i), nextAddVal)) {
                         nextAddVal = currentLine.get(i);
                         addValIndex = i;
@@ -85,8 +85,8 @@ public class MergeSort {
             if (scanners.get(addValIndex).hasNextLine()) { // читает следующее значение из файла, с которого добавлял в out
                 filesNotEmpty = true;
                 try {
-                    Integer nextLineInt = Integer.parseInt(scanners.get(addValIndex).nextLine());
-                    if (compare(nextLineInt, nextAddVal)) { // игнорируем значения, которые нарушают порядок сортировки
+                    Integer nextLineInt = Integer.parseInt(scanners.get(addValIndex).nextLine().trim());
+                    if (!compare(nextAddVal, nextLineInt)) { // игнорируем значения, которые нарушают порядок сортировки
                         continue;
                     }
                     currentLine.set(addValIndex, nextLineInt);
@@ -130,7 +130,7 @@ public class MergeSort {
         ArrayList<String> currentLine = new ArrayList<>(scanners.size());
         for (int i = 0; i < scanners.size(); i++) { // заполняет начальные значения
             if (scanners.get(i).hasNextLine()) {
-                String nextLine = scanners.get(i).nextLine();
+                String nextLine = scanners.get(i).nextLine().trim();
                 if (nextLine.isBlank()) {
                     i--;
                     continue;
@@ -157,8 +157,8 @@ public class MergeSort {
 
             if (scanners.get(addValIndex).hasNextLine()) { // читает следующее значение из файла, с которого добавлял в out
                 filesNotEmpty = true;
-                String nextLine = scanners.get(addValIndex).nextLine();
-                if ((nextLine.isBlank()) || (compare(nextLine, nextAddVal))) {  // игнорируем пустые строки и строки, которые нарушают порядок сортировки
+                String nextLine = scanners.get(addValIndex).nextLine().trim();
+                if ((nextLine.isBlank()) || (!compare(nextAddVal, nextLine))) {  // игнорируем пустые строки и строки, которые нарушают порядок сортировки
                     continue;
                 }
                 currentLine.set(addValIndex, nextLine);
