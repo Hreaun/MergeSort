@@ -70,7 +70,10 @@ public class MergeSort {
             } else { // если файл пустой - удаляет сканнер
                 scanners.get(i).close();
                 scanners.remove(i);
-                currentLine.remove(i);
+                i--;
+                if (scanners.size() == 0) {
+                    return;
+                }
             }
         }
         try {
@@ -96,6 +99,9 @@ public class MergeSort {
             } else {
                 scanners.get(addValIndex).close();
                 scanners.remove(addValIndex);
+                if (scanners.size() == 0) {
+                    return;
+                }
                 currentLine.remove(addValIndex);
             }
 
@@ -143,7 +149,10 @@ public class MergeSort {
             } else {
                 scanners.get(i).close();
                 scanners.remove(i);
-                currentLine.remove(i);
+                i--;
+                if (scanners.size() == 0) {
+                    return;
+                }
             }
         }
         try {
@@ -165,6 +174,9 @@ public class MergeSort {
             } else {
                 scanners.get(addValIndex).close();
                 scanners.remove(addValIndex);
+                if (scanners.size() == 0) {
+                    return;
+                }
                 currentLine.remove(addValIndex);
             }
 
