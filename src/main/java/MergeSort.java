@@ -56,7 +56,7 @@ public class MergeSort {
         int addValIndex = 0;
         boolean filesNotEmpty = true;
         ArrayList<Integer> currentLine = new ArrayList<>(scanners.size());
-        for (int i = 0; i < scanners.size(); i++) { // заполняет начальные значения
+        for (int i = 0; i < scanners.size(); i++) { // заполняем начальные значения
             if (scanners.get(i).hasNextLine()) {
                 try {
                     currentLine.add(i, Integer.parseInt(scanners.get(i).nextLine().trim()));
@@ -67,7 +67,7 @@ public class MergeSort {
                 } catch (NumberFormatException e) {
                     i--;
                 }
-            } else { // если файл пустой - удаляет сканнер
+            } else { // если файл пустой - удаляем сканнер
                 scanners.get(i).close();
                 scanners.remove(i);
                 i--;
@@ -85,7 +85,7 @@ public class MergeSort {
         while (filesNotEmpty) {
             filesNotEmpty = false;
 
-            if (scanners.get(addValIndex).hasNextLine()) { // читает следующее значение из файла, с которого добавлял в out
+            if (scanners.get(addValIndex).hasNextLine()) { // читаем следующее значение из файла, с которого добавляли в out
                 filesNotEmpty = true;
                 try {
                     Integer nextLineInt = Integer.parseInt(scanners.get(addValIndex).nextLine().trim());
@@ -134,7 +134,7 @@ public class MergeSort {
         int addValIndex = 0;
         boolean filesNotEmpty = true;
         ArrayList<String> currentLine = new ArrayList<>(scanners.size());
-        for (int i = 0; i < scanners.size(); i++) { // заполняет начальные значения
+        for (int i = 0; i < scanners.size(); i++) { // заполняем начальные значения
             if (scanners.get(i).hasNextLine()) {
                 String nextLine = scanners.get(i).nextLine().trim();
                 if (nextLine.isBlank()) {
@@ -164,7 +164,7 @@ public class MergeSort {
         while (filesNotEmpty) {
             filesNotEmpty = false;
 
-            if (scanners.get(addValIndex).hasNextLine()) { // читает следующее значение из файла, с которого добавлял в out
+            if (scanners.get(addValIndex).hasNextLine()) { // читаем следующее значение из файла, с которого добавляли в out
                 filesNotEmpty = true;
                 String nextLine = scanners.get(addValIndex).nextLine().trim();
                 if ((nextLine.isBlank()) || (!compare(nextAddVal, nextLine))) {  // игнорируем пустые строки и строки, которые нарушают порядок сортировки
