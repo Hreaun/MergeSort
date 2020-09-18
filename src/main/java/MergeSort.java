@@ -29,7 +29,7 @@ public class MergeSort {
             writer = new FileWriter(outFile);
         } catch (IOException e) {
             System.out.println("Cannot create/write to the output file.");
-            System.exit(-1);
+            System.exit(1);
         }
     }
 
